@@ -1,0 +1,6 @@
+.navbar {
+    width: 250px;
+    height: 100px;
+    transition: 0.4%;
+    position: fixed;
+}

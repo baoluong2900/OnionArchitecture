@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Serialization;
 
 namespace EmployeeManager
 {
@@ -38,22 +39,46 @@ namespace EmployeeManager
             services.AddTransient<IEmployeeService, EmployeeService>();
             #endregion
 
-            #region create Configuring CORS
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(builder =>
-                {
-                    builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
-                });
+            //#region create Configuring CORS
+            //services.AddCors(options =>
+            //{
+            //    options.AddDefaultPolicy(builder =>
+            //    {
+            //        builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+            //    });
 
 
-            });
-            #endregion
+            //});
+            //#endregion
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EmployeeManager", Version = "v1" });
             });
+
+            //#region Enables Cors
+            //services.AddCors(options =>
+            //{
+            //    //options.AddDefaultPolicy(builder =>
+            //    //{
+            //    //    builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+            //    //});
+            //    options.AddPolicy("AllowOrigin", options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
+
+            //});
+            //#endregion
+
+            //#region JSON Serializer
+            //services.AddControllersWithViews().AddNewtonsoftJson( options => options.SerializerSettings.ReferenceLoopHandling = 
+            //Newtonsoft.Json.ReferenceLoopHandling.Ignore).AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+            //#endregion
+
+            services.AddCors();
+
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,7 +90,8 @@ namespace EmployeeManager
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EmployeeManager v1"));
             }
-            app.UseCors();
+            //app.UseCors();
+            app.UseCors(options => options.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:4200"));
 
             app.UseHttpsRedirection();
 
